@@ -1,25 +1,16 @@
-const request = require('request');
-const serviceKey = require('../keys/key');
+const axios = require('axios');
+const { publicPortalKey } = require('../keys/key');
 
 const library = (stationName, callback) => {
-    const url = `http://data4library.kr/api/itemSrch?libCode=111034&startDt=2017-06-01&endDt=2017-06-30&authKey=${serviceKey}`;
+    const url = `http://data4library.kr/api/itemSrch?libCode=111034&startDt=2017-06-01&endDt=2017-06-30&authKey=${publicPortalKey}`;
 
-    request(url, (error, response, body) => {
-        if (error) {
-            return callback(error, null);
-        }
-
-        if (response.statusCode !== 200) {
-            return callback(new Error(`Unexpected status code: ${response.statusCode}`), null);
-        }
-
-        try {
-            const data = JSON.parse(body);
-            callback(null, data);
-        } catch (parseError) {
-            callback(parseError, null);
-        }
-    });
+    axios.get(url)
+        .then(response => {
+            callback(null, response.data);
+        })
+        .catch(error => {
+            callback(error, null);
+        });
 };
 
 module.exports = library;
