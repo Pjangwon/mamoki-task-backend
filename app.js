@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 const dotenv = require('dotenv');
+const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 존재하지 않음`);
