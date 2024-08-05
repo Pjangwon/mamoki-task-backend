@@ -1,9 +1,9 @@
 const express = require('express');
-const morgan = require('morgan');
 const path = require('path');
 const dotenv = require('dotenv');
 const library = require('./utils/library');
 const nunjucks = require('nunjucks');
+const morgan = require('morgan');
 
 dotenv.config();
 
@@ -24,8 +24,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.get('/library', (req, res, next) => {
-    const stationName = req.query.stationName;
-    library(stationName, (error, data) => {
+    const params = {
+        type: req.query.type,
+        authKey: req.query.authKey,
+        libCode: req.query.libCode,
+        startDt: req.query.startDt,
+        endDt: req.query.endDt,
+        format: 'json'
+    };
+
+    library(params, (error, data) => {
         if (error) {
             return next(error);
         }
